@@ -1,8 +1,8 @@
 {
-  "name": "goit-react-hw-04-feedback",
+  "name": "goit-react-hw-04-phonebook",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://marinaboikova.github.io/goit-react-hw-04-feedback/",
+  "homepage": "https://marinaboikova.github.io/goit-react-hw-04-phonebook/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

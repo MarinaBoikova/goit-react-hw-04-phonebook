@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+.container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  min-height: 590px;
+  width: 1000px;
+  margin: 100px auto;
+  padding: 50px 100px;
+}
+.contantWrap {
+  width: 50%;
+}
+
+.title {
+  font-size: 50px;
+  letter-spacing: 1.5px;
+}
+.subtitle {
+  font-size: 30px;
+  margin-top: 50px;
+}
