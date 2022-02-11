@@ -1,6 +1,6 @@
-// import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import { Component } from 'react';
+// import { Component } from 'react';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
@@ -8,74 +8,112 @@ import * as storage from './services/localStorage';
 
 const STORAGE_KEY = 'contacts';
 
-class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
+// class App extends Component {
+//   state = {
+//     contacts: [],
+//     filter: '',
+//   };
+//Рефакторинг App
+// Добавляем useState()
 
-  componentDidMount() {
-    const savedContacts = storage.get(STORAGE_KEY);
-    if (savedContacts) {
-      this.setState({ contacts: savedContacts });
-    }
-  }
+const App = () => {
+  const [contacts, setContacts] = useState(
+    () => storage.get(STORAGE_KEY) ?? [],
+  );
+  // componentDidMount() {
+  //   const savedContacts = storage.get(STORAGE_KEY);
+  //   if (savedContacts) {
+  //     this.setState({ contacts: savedContacts });
+  //   }
+  // }
+  const [filter, setFilter] = useState('');
 
-  componentDidUpdate(prevProps, prevState) {
-    const { contacts } = this.state;
-    if (prevState.contacts !== contacts) {
-      storage.save(STORAGE_KEY, contacts);
-    }
-  }
+  useEffect(() => {
+    storage.save(STORAGE_KEY, contacts);
+  }, [contacts]);
 
-  onSubmit = newContact => {
+  // componentDidUpdate(prevProps, prevState) {
+  //   const { contacts } = this.state;
+  //   if (prevState.contacts !== contacts) {
+  //     storage.save(STORAGE_KEY, contacts);
+  //   }
+  // }
+
+  const onSubmit = newContact => {
     const { id, name, number } = newContact;
 
     const isInContactList = contact => contact.name === newContact.name;
 
-    this.state.contacts.some(isInContactList)
+    contacts.some(isInContactList)
       ? alert(`${newContact.name} is already in contacts`)
-      : this.setState(prevState => ({
-          contacts: [...prevState.contacts, { id, name, number }],
+      : setContacts(contacts => ({
+          contacts: [...contacts, { id, name, number }],
         }));
   };
 
-  onChangeInput = e => {
-    this.setState({ filter: e.target.value });
+  const onChangeInput = e => {
+    setFilter(e.target.value);
   };
+  // onChangeInput = e => {
+  //   this.setState({ filter: e.target.value });
+  // };
 
-  onFilterChange = () => {
-    const value = this.state.filter;
-    return this.state.contacts.filter(elem =>
+  const onFilterChange = () => {
+    const value = filter;
+    return contacts.filter(elem =>
       elem.name.toLowerCase().includes(value.toLowerCase()),
     );
   };
+  // onFilterChange = () => {
+  //   const value = this.state.filter;
+  //   return this.state.contacts.filter(elem =>
+  //     elem.name.toLowerCase().includes(value.toLowerCase()),
+  //   );
+  // };
 
-  deleteContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(elem => elem.id !== id),
-    }));
+  const deleteContact = id => {
+    setContacts(prevContacts => {
+      prevContacts.filter(elem => elem.id !== id);
+    });
   };
+  // deleteContact = id => {
+  //   this.setState(prevState => ({
+  //     contacts: prevState.contacts.filter(elem => elem.id !== id),
+  //   }));
+  // };
 
-  render() {
-    const { contacts, filter } = this.state;
-
-    return (
+  return (
+    <>
+      <h1>Phonebook</h1>
       <div>
-        <div>
-          <h1>Phonebook</h1>
-          <div>
-            <ContactForm onSubmit={this.onSubmit} contacts={contacts} />
-          </div>
-          <h2>Contacts:</h2>
-          <Filter value={filter} onChange={this.onChangeInput} />
-          <ContactList
-            contacts={this.onFilterChange()}
-            onDelete={this.deleteContact}
-          />
-        </div>
+        <ContactForm onSubmit={onSubmit} contacts={contacts} />
       </div>
-    );
-  }
-}
+      <h2>Contacts:</h2>
+      <Filter value={filter} onChange={onChangeInput} />
+      <ContactList contacts={onFilterChange()} onDelete={deleteContact} />
+    </>
+  );
+};
+
+//   render() {
+//     const { contacts, filter } = this.state;
+
+//     return (
+//       <div>
+//         <div>
+//           <h1>Phonebook</h1>
+//           <div>
+//             <ContactForm onSubmit={this.onSubmit} contacts={contacts} />
+//           </div>
+//           <h2>Contacts:</h2>
+//           <Filter value={filter} onChange={this.onChangeInput} />
+//           <ContactList
+//             contacts={this.onFilterChange()}
+//             onDelete={this.deleteContact}
+//           />
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 export default App;
