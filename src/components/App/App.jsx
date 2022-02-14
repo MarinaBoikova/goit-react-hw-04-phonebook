@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import * as storage from './services/localStorage';
+import { useState, useEffect } from 'react';
+import s from './App.module.css';
 
 const STORAGE_KEY = 'contacts';
 
@@ -22,9 +24,7 @@ const App = () => {
 
     contacts.some(isInContactList)
       ? alert(`${newContact.name} is already in contacts`)
-      : setContacts(contacts => ({
-          contacts: [...contacts, { id, name, number }],
-        }));
+      : setContacts(contacts => [...contacts, { id, name, number }]);
   };
 
   const onChangeInput = e => {
@@ -32,24 +32,21 @@ const App = () => {
   };
 
   const onFilterChange = () => {
-    return contacts.filter(item => {
-      return item.name.toLowerCase().includes(filter.toLowerCase());
-    });
+    const value = filter;
+    return contacts.filter(elem =>
+      elem.name.toLowerCase().includes(value.toLowerCase()),
+    );
   };
 
   const deleteContact = id => {
-    setContacts(prevContacts => {
-      prevContacts.filter(elem => elem.id !== id);
-    });
+    setContacts(prevContacts => prevContacts.filter(elem => elem.id !== id));
   };
-
   return (
     <>
-      <h1>Phonebook</h1>
-      <div>
-        <ContactForm onSubmit={onSubmit} contacts={contacts} />
+      <div className={s.wrap}>
+        <ContactForm onSubmitForm={onSubmit} contacts={contacts} />
       </div>
-      <h2>Contacts:</h2>
+      <h2 className={s.subtitle}>Contacts:</h2>
       <Filter value={filter} onChange={onChangeInput} />
       <ContactList contacts={onFilterChange()} onDelete={deleteContact} />
     </>
