@@ -32,9 +32,9 @@ const App = () => {
   };
 
   const onFilterChange = () => {
-    return contacts.filter(elem =>
-      elem.name.toLowerCase().includes(filter.toLowerCase()),
-    );
+    return contacts.filter(item => {
+      return item.name.toLowerCase().includes(filter.toLowerCase());
+    });
   };
 
   const deleteContact = id => {
